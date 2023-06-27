@@ -13,27 +13,101 @@ class _HomePageState extends State<HomePage> {
   bool first = true;
   String username = 'Username';
   List<String> buttonLabels = [
-    'Tapsi',
-    'Beverages',
+    'TAPSI',
+    'BEVERAGES',
   ];
   List<List<dynamic>> menu = [
-    ['Product 1', 'Price 1', '15-20 minutes', AssetImage('images/ambot.png')],
-    ['Product 2', 'Price 2', '10-15 minutes', AssetImage('images/ambot.png')],
-    ['Product 1', 'Price 1', '15-20 minutes', AssetImage('images/ambot.png')],
-    ['Product 2', 'Price 2', '10-15 minutes', AssetImage('images/ambot.png')],
-    ['Product 1', 'Price 1', '15-20 minutes', AssetImage('images/ambot.png')],
-    ['Product 2', 'Price 2', '10-15 minutes', AssetImage('images/ambot.png')],
-    ['Product 1', 'Price 1', '15-20 minutes', AssetImage('images/ambot.png')],
-    ['Product 2', 'Price 2', '10-15 minutes', AssetImage('images/ambot.png')],
-    ['Product 1', 'Price 1', '15-20 minutes', AssetImage('images/ambot.png')],
-    ['Product 2', 'Price 2', '10-15 minutes', AssetImage('images/ambot.png')],
-    ['Product 1', 'Price 1', '15-20 minutes', AssetImage('images/ambot.png')],
-    ['Product 2', 'Price 2', '10-15 minutes', AssetImage('images/ambot.png')],
+    [
+      'PRODUCT 1',
+      'PRICE 1',
+      'TAPSI',
+      '15-20 minutes',
+      AssetImage('images/ambot.png')
+    ],
+    [
+      'PRODUCT 2',
+      'Price 2',
+      'BEVERAGES',
+      '10-15 minutes',
+      AssetImage('images/ambot.png')
+    ],
+    [
+      'PRODUCT 1',
+      'PRICE 1',
+      'TAPSI',
+      '15-20 minutes',
+      AssetImage('images/ambot.png')
+    ],
+    [
+      'PRODUCT 2',
+      'Price 2',
+      'BEVERAGES',
+      '10-15 minutes',
+      AssetImage('images/ambot.png')
+    ],
+    [
+      'PRODUCT 1',
+      'PRICE 1',
+      'TAPSI',
+      '15-20 minutes',
+      AssetImage('images/ambot.png')
+    ],
+    [
+      'PRODUCT 2',
+      'Price 2',
+      'TAPSI',
+      '10-15 minutes',
+      AssetImage('images/ambot.png')
+    ],
+    [
+      'PRODUCT 1',
+      'PRICE 1',
+      'TAPSI',
+      '15-20 minutes',
+      AssetImage('images/ambot.png')
+    ],
+    [
+      'PRODUCT 2',
+      'Price 2',
+      'BEVERAGES',
+      '10-15 minutes',
+      AssetImage('images/ambot.png')
+    ],
+    [
+      'PRODUCT 1',
+      'PRICE 1',
+      'BEVERAGES',
+      '15-20 minutes',
+      AssetImage('images/ambot.png')
+    ],
+    [
+      'PRODUCT 2',
+      'Price 2',
+      'BEVERAGES',
+      '10-15 minutes',
+      AssetImage('images/ambot.png')
+    ],
+    [
+      'PRODUCT 1',
+      'PRICE 1',
+      'BEVERAGES',
+      '15-20 minutes',
+      AssetImage('images/ambot.png')
+    ],
+    [
+      'PRODUCT 2',
+      'Price 2',
+      'BEVERAGES',
+      '10-15 minutes',
+      AssetImage('images/ambot.png')
+    ],
 
     // ['Product 3', 'Price 3', 'Details 3', AssetImage('images/ambot.png')],
   ];
   // Labels for the buttons
   int selectedIndex = 0; // Track the index of the selected button
+  String search = '';
+  String selectedGroup = 'TAPSI';
   @override
   Widget build(BuildContext context) {
     if (first) {
@@ -41,6 +115,11 @@ class _HomePageState extends State<HomePage> {
       buttonLabels.insert(0, 'All');
     }
 
+    List<List<dynamic>> filteredMenu = menu
+        .where((item) => search != ''
+            ? item[0].contains(search)
+            : (selectedGroup == 'All' || item[2] == selectedGroup))
+        .toList();
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -98,6 +177,12 @@ class _HomePageState extends State<HomePage> {
                       borderSide: BorderSide.none,
                     ),
                   ),
+                  onChanged: (value) {
+                    // String upperValue = value.toUpperCase();
+                    setState(() {
+                      search = value.toUpperCase();
+                    });
+                  },
                 ),
                 SizedBox(height: 16.0),
                 SizedBox(
@@ -117,6 +202,7 @@ class _HomePageState extends State<HomePage> {
                         child: ElevatedButton(
                           onPressed: () {
                             setState(() {
+                              selectedGroup = buttonLabels[index];
                               selectedIndex = index;
                             });
                           },
@@ -140,12 +226,12 @@ class _HomePageState extends State<HomePage> {
                   height: MediaQuery.of(context).size.height * 0.65,
                   child: ListView.builder(
                     scrollDirection: Axis.vertical,
-                    itemCount: menu.length,
+                    itemCount: filteredMenu.length,
                     itemBuilder: (context, index) {
-                      String productName = menu[index][0];
-                      String price = menu[index][1];
-                      String details = menu[index][2];
-                      AssetImage image = menu[index][3];
+                      String productName = filteredMenu[index][0];
+                      String price = filteredMenu[index][1];
+                      String details = filteredMenu[index][3];
+                      AssetImage image = filteredMenu[index][4];
 
                       return GestureDetector(
                         onTap: () {
